@@ -1,8 +1,8 @@
-import state_machine
-import string
+from state_machine import Automaton
+from string import ascii_letters
 
 
-class Lexf():
+class LexicalAnalysis(Automaton):
     def __init__(self):
         # Define as transições descritas na imagem automato_base.png
         transitions = {
@@ -43,12 +43,9 @@ class Lexf():
             "q10": {}
         }
 
-        for letter in string.ascii_letters:
-            transitions["q0"].update({letter: "q4"})
-            transitions["q4"].update({letter: "q4"})
-
-        for num in '0123456789':
-            transitions["q4"].update({num: "q4"})
+        transitions["q0"].update({letter: "q4" for letter in ascii_letters})
+        transitions["q4"].update({letter: "q4" for letter in ascii_letters})
+        transitions["q4"].update({num: "q4" for num in "0123456789"})
 
         # Define os estados finais
         final_states = {
@@ -66,7 +63,7 @@ class Lexf():
         }
 
         # Instancia o autômato com as transições e estados finais
-        self.__automaton = state_machine.Automaton(transitions, final_states)
+        super(LexicalAnalysis, self).__init__(transitions, final_states)
 
         self.__error_messages = {
             "q0": "Token inválido",
@@ -86,7 +83,7 @@ class Lexf():
         }
 
     # Função para aceitar ou rejeitar uma sequência de tokens
-    def corretude(self, input_data):
+    def evaluate(self, input_data: str) -> tuple:
 
         # Define que a palavra será aceita
         accepted = True
@@ -103,7 +100,7 @@ class Lexf():
         # Define o estado atual como o estado inicial
         current_state = "q0"
         # Define as transições como as transições do autômato
-        transitions = self.__automaton.get_transitions()
+        transitions = self.get_transitions()
 
         # Para cada caracter na sequência
         for char in input_data:
@@ -113,7 +110,7 @@ class Lexf():
                 # Se não houver transição do estado atual que consuma o carater
                 if not (char in current_transitions):
                     # Se o estado atual for final
-                    if self.__automaton.is_final(current_state):
+                    if self.is_final(current_state):
                         # Adiciona o token e seu valor aos tokens aceitos
                         token = self.__tokens[current_state]
                         accepted_tokens.append((token, value))
@@ -149,14 +146,14 @@ class Lexf():
                 current_state = "q0"
 
         # Se o estado atual for final
-        if self.__automaton.is_final(current_state):
+        if self.is_final(current_state):
             # Adiciona o último token e seu valor aos tokens aceitos
             token = self.__tokens[current_state]
             accepted_tokens.append((token, value))
 
         # Após ler toda a entrada
         # a palavra é aceita se o estado atual for final e rejeitada caso contrário
-        if(self.__automaton.is_final(current_state)):
+        if(self.is_final(current_state)):
             if accepted:
                 return (True, accepted_tokens, None)
             else:
