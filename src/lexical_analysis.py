@@ -3,6 +3,10 @@ from string import ascii_letters
 
 
 class LexicalAnalysis(Automaton):
+    """
+    Lexical analysis is a finite state machine that accepts or rejects a sequence of tokens
+    """
+
     def __init__(self):
         # Define as transições descritas na imagem automato_base.png
         transitions = {
@@ -17,30 +21,20 @@ class LexicalAnalysis(Automaton):
                 ">": "q9",
                 "=": "q10",
             },
-
             "q1": {},
-
             "q2": {},
-
             "q3": {},
-
             "q4": {},
-
             "q5": {
                 "/": "q6",
             },
-
             "q6": {},
-
             "q7": {
                 "\\": "q8",
             },
-
             "q8": {},
-
             "q9": {},
-
-            "q10": {}
+            "q10": {},
         }
 
         transitions["q0"].update({letter: "q4" for letter in ascii_letters})
@@ -72,18 +66,30 @@ class LexicalAnalysis(Automaton):
         }
 
         self.__tokens = {
-            'q1': 'PAR',
-            'q2': 'NEG',
-            'q3': 'BIN',
-            'q4': 'VAR',
-            'q6': 'DISJ',
-            'q8': 'CONJ',
-            'q9': 'COND',
-            'q10': 'BICON',
+            "q1": "PAR",
+            "q2": "NEG",
+            "q3": "BIN",
+            "q4": "VAR",
+            "q6": "DISJ",
+            "q8": "CONJ",
+            "q9": "COND",
+            "q10": "BICON",
         }
 
     # Função para aceitar ou rejeitar uma sequência de tokens
     def evaluate(self, input_data: str) -> tuple:
+        """
+        Evaluate the input data
+        Args:
+            input_data (str): Input data to be evaluated
+        Returns:
+            tuple: A tuple containing:
+                - bool: True if the input data is accepted, False otherwise
+                - list: List of tuples containing:
+                    - str: Token name
+                    - str: Token value
+                - list: List of error messages
+        """
 
         # Define que a palavra será aceita
         accepted = True
@@ -92,10 +98,10 @@ class LexicalAnalysis(Automaton):
         # Array de mensagens de erro
         errors = []
         # Valor associado ao token
-        value = ''
+        value = ""
 
         # Trata a string, removendo espaços em branco e nova linha
-        input_data = input_data.replace(' ', '').replace('\n', '')
+        input_data = input_data.replace(" ", "").replace("\n", "")
 
         # Define o estado atual como o estado inicial
         current_state = "q0"
@@ -120,13 +126,17 @@ class LexicalAnalysis(Automaton):
                         # O token não é aceito, pois não há transição naquele estado que consuma o caracter lido
                         accepted = False
                         # Adiciona mensagens de erros a serem retornadas
-                        errors.append("Em '" + char + "': " +
-                                      self.__error_messages[current_state])
+                        errors.append(
+                            "Antes de '"
+                            + char
+                            + "': "
+                            + self.__error_messages[current_state]
+                        )
 
                     # Redefine o estado atual como o estado inical
                     current_state = "q0"
                     # Redefine o valor associado ao token como vazio
-                    value = ''
+                    value = ""
                     # Tenta acessar as transições do estado atual
                     current_transitions = transitions[current_state]
 
@@ -140,8 +150,9 @@ class LexicalAnalysis(Automaton):
                 # O token não é aceito, pois não há transição naquele estado que consuma o caracter lido
                 accepted = False
                 # Adiciona mensagens de erros a serem retornadas
-                errors.append("Em '" + char + "': " +
-                              self.__error_messages[current_state])
+                errors.append(
+                    "Em '" + char + "': " + self.__error_messages[current_state]
+                )
                 # Redefine o estado atual como o estado inical
                 current_state = "q0"
 
@@ -153,7 +164,7 @@ class LexicalAnalysis(Automaton):
 
         # Após ler toda a entrada
         # a palavra é aceita se o estado atual for final e rejeitada caso contrário
-        if(self.is_final(current_state)):
+        if self.is_final(current_state):
             if accepted:
                 return (True, accepted_tokens, None)
             else:

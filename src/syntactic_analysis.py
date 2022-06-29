@@ -1,34 +1,46 @@
 from queue import deque
 
 
-class SyntacticAnalysis():
+class SyntacticAnalysis:
+    """
+    Syntactic Analysis is a class that implements the syntactic analysis of a given input.
+    """
+
     def __init__(self):
         self.__stack = deque()
         self.__queue = deque()
 
     def __shunting_yard(self, input_data: list = []) -> deque:
+        """
+        Shunting Yard is a method that implements the shunting yard algorithm to convert a given input into a postfix notation.
+        Args:
+            input_data (list): list of tuples containing:
+                - bool: True if the input data is accepted, False otherwise
+                - list: List of tuples containing:
+                    - str: Token name
+                    - str: Token value
+                - list: List of error messages
+        Returns:
+            tuple: A tuple containing:
+                - bool: True if the input data is accepted, False otherwise
+                - list: List of errors messages
+        """
         accepted = True
         errors = []
 
-        precedence = {
-            'NEG': 3,
-            'DISJ': 2,
-            'CONJ': 2,
-            'COND': 1,
-            'BICON': 1
-        }
+        precedence = {"NEG": 3, "DISJ": 2, "CONJ": 2, "COND": 1, "BICON": 1}
 
         # Enquanto existirem tokens a serem lidos
         for i, (token, value) in enumerate(input_data):
             # Se for um literal
-            if token == 'BIN' or token == 'VAR':
+            if token == "BIN" or token == "VAR":
                 # Insere na fila de saída
                 self.__queue.append((token, value))
 
             # Se for um parêntese
-            elif token == 'PAR':
+            elif token == "PAR":
                 # Se for esquerdo
-                if value == '(':
+                if value == "(":
                     # Insere na pilha
                     self.__stack.appendleft((token, value))
                 # Se for direito
@@ -39,7 +51,7 @@ class SyntacticAnalysis():
                         # Saca o topo da pilha
                         top = self.__stack.popleft()
                         # Se for um parêntese esquerdo, descarte
-                        if top[1] == '(':
+                        if top[1] == "(":
                             opened_bracket = True
                             break
                         # Caso contrário, insira na fila de saída
@@ -57,7 +69,7 @@ class SyntacticAnalysis():
                 while len(self.__stack) != 0:
                     # Saca o topo da pilha
                     top_token, top_value = self.__stack.popleft()
-                    if top_token == 'PAR':
+                    if top_token == "PAR":
                         self.__stack.appendleft((top_token, top_value))
                         break
                     # Inicializa um Enum com o operador do topo
@@ -74,9 +86,9 @@ class SyntacticAnalysis():
                         break
                 # Insere o token atual no topo da pilha
                 self.__stack.appendleft((token, value))
-            #print("Queue:", [value for value in self.__queue])
-            #print("Stack:", [value for value in self.__stack])
-            #print("-"*20)
+            # print("Queue:", [value for value in self.__queue])
+            # print("Stack:", [value for value in self.__stack])
+            # print("-"*20)
 
         # Enquanto a pilha não estiver vazia
         while len(self.__stack) != 0:
@@ -85,12 +97,26 @@ class SyntacticAnalysis():
             # Insere na fila de saída
             self.__queue.append(top)
 
-        #print("Queue:", [value for value in self.__queue])
-        #print("Stack:", [value for value in self.__stack])
-        #print("-"*20)
+        # print("Queue:", [value for value in self.__queue])
+        # print("Stack:", [value for value in self.__stack])
+        # print("-"*20)
         return (accepted, errors.copy())
 
     def evaluate(self, input_data: list = []) -> tuple:
+        """
+        Evaluate is a method that evaluates a given input in postfix notation.
+        Args:
+            input_data (list): list of tuples representing the input data as:
+                - str: Token name
+                - str: Token value
+        Returns:
+            tuple: A tuple containing:
+                - bool: True if the input data is accepted, False otherwise
+                - list: List of tuples containing:
+                    - str: Token name
+                    - str: Token value
+                - list: List of errors messages
+        """
         # Executa Shunting Yard
         accepted, errors = self.__shunting_yard(input_data)
         aux_queue = self.__queue.copy()
@@ -100,25 +126,26 @@ class SyntacticAnalysis():
             # Lê o token
             token, value = aux_queue.popleft()
             # Se for um literal
-            if token == 'BIN' or token == 'VAR':
+            if token == "BIN" or token == "VAR":
                 # Insere na pilha
                 self.__stack.appendleft((token, value))
 
             # Se for uma negação
-            elif token == 'NEG':
+            elif token == "NEG":
                 # Se houver ao menos um token na pilha
                 if len(self.__stack) > 0:
                     # Lê o topo da pilha
                     first_token, first_value = self.__stack.popleft()
                     # Se não for binário ou varivável
-                    if first_token != 'BIN' and first_token != 'VAR':
+                    if first_token != "BIN" and first_token != "VAR":
                         # Não é possível operar, joga um erro
                         errors.append(
-                            f"Impossível operar {(token, value)} com {(first_token, first_value)}")
+                            f"Impossível operar {(token, value)} com {(first_token, first_value)}"
+                        )
                         accepted = False
                         continue
                     # Cria um token equivalente a valoração da operação
-                    res = ('VAR', f'({value} {first_value})')
+                    res = ("VAR", f"({value} {first_value})")
                     # Insere o token na pilha
                     self.__stack.appendleft(res)
                 # Se a pilha estiver vazia
@@ -134,25 +161,27 @@ class SyntacticAnalysis():
                     # Lê o topo da pilha
                     second_token, second_value = self.__stack.popleft()
                     # Se não for binário ou varivável
-                    if second_token != 'BIN' and second_token != 'VAR':
+                    if second_token != "BIN" and second_token != "VAR":
                         # Não é possível operar, joga um erro
                         errors.append(
-                            f"Impossível operar {(token, value)} com {(second_token, second_value)}")
+                            f"Impossível operar {(token, value)} com {(second_token, second_value)}"
+                        )
                         accepted = False
                         continue
 
                     # Lê o topo da pilha
                     first_token, first_value = self.__stack.popleft()
                     # Se não for binário ou varivável
-                    if first_token != 'BIN' and first_token != 'VAR':
+                    if first_token != "BIN" and first_token != "VAR":
                         # Não é possível operar, joga um erro
                         errors.append(
-                            f"Impossível operar {(token, value)} com {(first_token, first_value)}")
+                            f"Impossível operar {(token, value)} com {(first_token, first_value)}"
+                        )
                         accepted = False
                         continue
 
                     # Cria um token equivalente a valoração da operação
-                    res = ('VAR', f'({first_value} {value} {second_value})')
+                    res = ("VAR", f"({first_value} {value} {second_value})")
                     # Insere o token na pilha
                     self.__stack.appendleft(res)
 
