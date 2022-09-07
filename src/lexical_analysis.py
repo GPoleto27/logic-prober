@@ -9,7 +9,7 @@ class LexicalAnalysis(Automaton):
 
     def __init__(self):
         # Define as transições descritas na imagem automato_base.png
-        transitions = {
+        transitions: dict = {
             "q0": {
                 "(": "q1",
                 ")": "q1",
@@ -37,12 +37,12 @@ class LexicalAnalysis(Automaton):
             "q10": {},
         }
 
-        transitions["q0"].update({letter: "q4" for letter in ascii_letters})
-        transitions["q4"].update({letter: "q4" for letter in ascii_letters})
-        transitions["q4"].update({num: "q4" for num in "0123456789"})
+        transitions.get("q0").update({letter: "q4" for letter in ascii_letters})
+        transitions.get("q4").update({letter: "q4" for letter in ascii_letters})
+        transitions.get("q4").update({num: "q4" for num in "0123456789"})
 
         # Define os estados finais
-        final_states = {
+        final_states: dict = {
             "q0": False,
             "q1": True,
             "q2": True,
@@ -59,13 +59,13 @@ class LexicalAnalysis(Automaton):
         # Instancia o autômato com as transições e estados finais
         super(LexicalAnalysis, self).__init__(transitions, final_states)
 
-        self.__error_messages = {
+        self.__error_messages: dict = {
             "q0": "Token inválido",
             "q5": "Esperado '/'.",
             "q7": "Esperado '\\'.",
         }
 
-        self.__tokens = {
+        self.__tokens: dict = {
             "q1": "PAR",
             "q2": "NEG",
             "q3": "BIN",
@@ -92,33 +92,33 @@ class LexicalAnalysis(Automaton):
         """
 
         # Define que a palavra será aceita
-        accepted = True
+        accepted: bool = True
         # Array de tuplas de tokens aceitos e seus respectivos valores
-        accepted_tokens = []
+        accepted_tokens: list = []
         # Array de mensagens de erro
-        errors = []
+        errors: list = []
         # Valor associado ao token
-        value = ""
+        value: str = ""
 
         # Trata a string, removendo espaços em branco e nova linha
-        input_data = input_data.replace(" ", "").replace("\n", "")
+        input_data: str = input_data.replace(" ", "").replace("\n", "")
 
         # Define o estado atual como o estado inicial
-        current_state = "q0"
+        current_state: str = "q0"
         # Define as transições como as transições do autômato
-        transitions = self.get_transitions()
+        transitions: dict = self.get_transitions()
 
         # Para cada caracter na sequência
         for char in input_data:
             try:
                 # Define as transições atuais como as transições do estado atual
-                current_transitions = transitions[current_state]
+                current_transitions: dict = transitions[current_state]
                 # Se não houver transição do estado atual que consuma o carater
                 if not (char in current_transitions):
                     # Se o estado atual for final
                     if self.is_final(current_state):
                         # Adiciona o token e seu valor aos tokens aceitos
-                        token = self.__tokens[current_state]
+                        token: str = self.__tokens[current_state]
                         accepted_tokens.append((token, value))
 
                     # Se o estado atual não for final
@@ -167,7 +167,4 @@ class LexicalAnalysis(Automaton):
         if self.is_final(current_state):
             if accepted:
                 return (True, accepted_tokens, None)
-            else:
-                return (False, None, errors)
-        else:
-            return (False, None, errors)
+        return (False, None, errors)

@@ -234,10 +234,12 @@ class SemanticAnalysis(Expression):
                 # Adiciona a operação com as expressões no topo da pilha
                 stack.appendleft(classes[token](l_value, r_value))
 
+            # Token desconhecido
+            else:
+                raise Exception("Invalid token, have you run the lexical analysis?")
+
         # Pega a expressão no topo da pilha
         self.__expression = stack.popleft()
-        # Imprime a expressão
-        print(str(self.__expression))
 
     def evaluate(self) -> list:
         """
@@ -250,7 +252,7 @@ class SemanticAnalysis(Expression):
         # Pega o número de variáveis da expressão
         n: int = len(env)
 
-        # Pega as combinações de variáveis da expressão
+        # Gera as combinações de variáveis da expressão
         combinations = [
             num for num in ("{0:b}".format(p).zfill(n) for p in range(2**n))
         ]
@@ -284,3 +286,37 @@ class SemanticAnalysis(Expression):
         """
         # Verifica se todos os resultados da expressão são falsos
         return all(not self.__results)
+
+    def is_satisfiable(self) -> bool:
+        """
+        is_satisfiable is a method that checks if the expression is satisfiable.
+        Returns:
+            bool: True if the expression is satisfiable, False otherwise
+        """
+        # Verifica se a expressão não é uma tautologia nem uma contradição
+        return not (self.is_tautology() or self.is_contradiction())
+
+    def is_contingency(self) -> bool:
+        """
+        is_contingency is a method that checks if the expression is a contingency.
+        Returns:
+            bool: True if the expression is a contingency, False otherwise
+        """
+        # Verifica se a expressão é satisfiável e não é uma tautologia
+        return self.is_satisfiable() and not self.is_tautology()
+
+    def get_variables(self) -> list:
+        """
+        variables is a method that returns the variables of the expression.
+        Returns:
+            list: The variables of the expression
+        """
+        return list(env.keys())
+    
+    def get_expression(self) -> Expression:
+        """
+        get_expression is a method that returns the expression.
+        Returns:
+            Expression: The expression
+        """
+        return self.__expression

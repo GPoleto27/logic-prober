@@ -8,8 +8,8 @@ class Automaton:
             final_states (dict): Final states are defined by the relation of an state and a boolean.
             # Ex: __final_states = {"q0": False, "q1": True, "q2": True}
         """
-        self.__transitions = transitions
-        self.__final_states = final_states
+        self.__transitions: dict = transitions
+        self.__final_states: dict = final_states
 
     def set_transitions(self, transitions: dict = {}) -> None:
         """
@@ -57,7 +57,7 @@ class Automaton:
             Transitions are defined by the relation of an state and a dictionary of transitions.
         """
         for key in new_transitions:
-            self.__transitions[key].update(new_transitions[key])
+            self.__transitions.get(key).update(new_transitions[key])
 
     def is_final(self, state: str = "") -> bool:
         """
@@ -67,4 +67,4 @@ class Automaton:
         Returns:
             bool: True if the state is a final state, False otherwise.
         """
-        return self.get_final_states()[state]
+        return self.get_final_states().get(state, False)

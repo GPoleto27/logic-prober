@@ -7,8 +7,8 @@ class SyntacticAnalysis:
     """
 
     def __init__(self):
-        self.__stack = deque()
-        self.__queue = deque()
+        self.__stack: deque = deque()
+        self.__queue: deque = deque()
 
     def __shunting_yard(self, input_data: list = []) -> deque:
         """
@@ -25,10 +25,10 @@ class SyntacticAnalysis:
                 - bool: True if the input data is accepted, False otherwise
                 - list: List of errors messages
         """
-        accepted = True
-        errors = []
+        accepted: bool = True
+        errors: list = []
 
-        precedence = {"NEG": 3, "DISJ": 2, "CONJ": 2, "COND": 1, "BICON": 1}
+        precedence: dict = {"NEG": 3, "DISJ": 2, "CONJ": 2, "COND": 1, "BICON": 1}
 
         # Enquanto existirem tokens a serem lidos
         for i, (token, value) in enumerate(input_data):
@@ -45,7 +45,7 @@ class SyntacticAnalysis:
                     self.__stack.appendleft((token, value))
                 # Se for direito
                 else:
-                    opened_bracket = False
+                    opened_bracket: bool = False
                     # Enquanto a pilha não estiver vazia
                     while len(self.__stack) != 0:
                         # Saca o topo da pilha
@@ -63,7 +63,7 @@ class SyntacticAnalysis:
             # Se for um operador
             else:
                 # Inicializa um Enum
-                current_operator = precedence[token]
+                current_operator: int = precedence.get(token)
 
                 # Enquanto a pilha não estiver vazia
                 while len(self.__stack) != 0:
@@ -73,7 +73,7 @@ class SyntacticAnalysis:
                         self.__stack.appendleft((top_token, top_value))
                         break
                     # Inicializa um Enum com o operador do topo
-                    top_operator = precedence[top_token]
+                    top_operator = precedence.get(top_token)
                     # Se o operador do topo for de maior precedência que o lido
                     if top_operator > current_operator:
                         # Insere na fila de saída
@@ -86,9 +86,6 @@ class SyntacticAnalysis:
                         break
                 # Insere o token atual no topo da pilha
                 self.__stack.appendleft((token, value))
-            # print("Queue:", [value for value in self.__queue])
-            # print("Stack:", [value for value in self.__stack])
-            # print("-"*20)
 
         # Enquanto a pilha não estiver vazia
         while len(self.__stack) != 0:
@@ -97,9 +94,6 @@ class SyntacticAnalysis:
             # Insere na fila de saída
             self.__queue.append(top)
 
-        # print("Queue:", [value for value in self.__queue])
-        # print("Stack:", [value for value in self.__stack])
-        # print("-"*20)
         return (accepted, errors.copy())
 
     def evaluate(self, input_data: list = []) -> tuple:
@@ -194,5 +188,4 @@ class SyntacticAnalysis:
 
         if accepted:
             return (True, self.__queue, None)
-        else:
-            return (False, None, errors)
+        return (False, None, errors)
