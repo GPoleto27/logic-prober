@@ -1,0 +1,14 @@
+q /\\ ~q \// v
+( Claudinho /\ Buchecha ) > Aquarela
+1 > 0 /\ ~
+( Cl4ud1nh0 /\ Buch3ch4 ) > Aqu4r3l4
+( Cl4ud1nh0 /\ Buch3ch4 ) > 4qu4r3l4
+A12 > 345B
+~q /\ p
+~(q /\ p)
+~q /\ p)
+~(q /\ p
+(q /\ p
+~(
+(p /\ ~q \/ r) > (s = 1)
+(~p) \/ (q /\ ~r) \/ (s)

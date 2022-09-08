@@ -35,4 +35,4 @@ Para o desenvolvimento do analisador semântico é utilizada a estrtura de árvo
 
 ## Otimização de expressões lógicas
 
-Para a integração do otimizador de expressões lógicas foi utilizado o [Kuine](https://github.com/luanaccampos/kuine), de onde foram extraídos [quine.py](/src/quine.py), [setCoverPD.py](/src/setCoverPD.py) e [setCoverGreedy.py](/src/setCoverGreedy.py) implementados por [Luana Cristina Guerreiro Campos](https://github.com/luanaccampos) e descritos no artigo [Software educacional para ensino de minimização de expressões lógicas](https://eventos.utfpr.edu.br/sicite/sicite2021/paper/view/7870)
+Para a integração do otimizador de expressões lógicas foi utilizado o [Kuine](https://github.com/luanaccampos/kuine), de onde foram extraídos [quine.py](/src/quine.py), [setCoverPD.py](/src/setCoverPD.py) e [setCoverGreedy.py](/src/setCoverGreedy.py) implementados por [Luana Cristina Guerreiro Campos](https://github.com/luanaccampos) e descritos no artigo [Software educacional para ensino de minimização de expressões lógicas](https://eventos.utfpr.edu.br/sicite/sicite2021/paper/view/7870).
