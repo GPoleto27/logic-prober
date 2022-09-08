@@ -63,7 +63,7 @@ def main():
                     continue
                 console.success("[SYN] Aceito.")
 
-                semantic = SemanticAnalysis(accepted_tokens.copy())
+                semantic = SemanticAnalysis(accepted_tokens)
                 
                 semantic_results = semantic.evaluate()
                 
