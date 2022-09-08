@@ -240,6 +240,7 @@ class SemanticAnalysis(Expression):
 
         # Pega a expressão no topo da pilha
         self.__expression = stack.popleft()
+        self._vars = list(env.keys())
 
     def evaluate(self) -> list:
         """
@@ -250,7 +251,7 @@ class SemanticAnalysis(Expression):
         global env
 
         # Pega o número de variáveis da expressão
-        n: int = len(env)
+        n: int = len(env.keys())
 
         # Gera as combinações de variáveis da expressão
         combinations = [
@@ -311,7 +312,7 @@ class SemanticAnalysis(Expression):
         Returns:
             list: The variables of the expression
         """
-        return list(env.keys())
+        return self._vars.copy()
     
     def get_expression(self) -> Expression:
         """
