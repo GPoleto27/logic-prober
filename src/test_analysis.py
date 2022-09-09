@@ -54,7 +54,7 @@ def main():
             print(f"Mean time for {file}: {total_time/samples}")
     
         # save the dataframe to a csv file
-        df.to_csv("avg_runtime_report.csv", index=False)    
+        df.to_csv("../runtime_analysis/avg_runtime_report.csv", index=False)    
 
 
 if __name__ == "__main__":
