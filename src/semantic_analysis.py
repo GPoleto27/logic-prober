@@ -270,6 +270,34 @@ class SemanticAnalysis(Expression):
         # Retorna a lista de resultados da expressão
         return self.__results.copy()
 
+    def print_truth_table(self):
+        """
+        print_truth_table is a method that pretty-prints the truth table of the expression.
+        """
+        from tabulate import tabulate
+
+        if self.__results == []:
+            self.evaluate()
+        
+        vars = self.get_variables()
+        n = len(vars)
+        vars.append("Resultado")
+
+        # Gera as combinações de variáveis da expressão
+        combinations = [
+            num for num in ("{0:b}".format(p).zfill(n) for p in range(2**n))
+        ]
+
+        vars 
+        table = [vars]
+        for i, combination in enumerate(combinations):
+            row = []
+            for j, _ in enumerate(env):
+                row.append(combination[j])
+            row.append("1" if self.__results[i] else "0")
+            table.append(row)
+        print(tabulate(table, headers='firstrow', tablefmt="fancy_grid"))
+
     def is_tautology(self) -> bool:
         """
         is_tautology is a method that checks if the expression is a tautology.

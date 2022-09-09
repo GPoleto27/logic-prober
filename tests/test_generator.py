@@ -3,7 +3,7 @@ from random import choice
 operations = ["/\\", "\\/", ">", "="]
 
 def main():
-    for n_vars in range(5, 27):
+    for n_vars in range(5, 17):
         n = 1
         vars = [chr(i) for i in range(ord("a"), ord("a")+n_vars)]
 

@@ -68,7 +68,9 @@ def main():
                 semantic_results = semantic.evaluate()
                 
                 vars = semantic.get_variables()
-                console.success(f"[SEM] {semantic_results}")
+
+                console.success(f"[SEM] Aceito.")
+                semantic.print_truth_table()
 
                 termos = []
                 for i in range(len(semantic_results)):
@@ -119,7 +121,8 @@ def main():
         semantic_results = semantic.evaluate()
         vars = semantic.get_variables()
 
-        console.success(f"[SEM] {semantic_results}")
+        console.success(f"[SEM] Aceito.")
+        semantic.print_truth_table()
 
         termos = []
         for i in range(len(semantic_results)):
