@@ -82,11 +82,11 @@ def main():
                 for r in quine_results:
                     prod = r[0]
                     exp = []
-                    for val in prod:
+                    for i, val in enumerate(prod):
                         if val == '0':
-                            exp.append(f"~{vars[prod.index(val)]}")
+                            exp.append(f"~{vars[i]}")
                         elif val == '1':
-                            exp.append(vars[prod.index(val)])
+                            exp.append(vars[i])
                     # Inserir "/\" entre cada expressão
                     exp = " /\\ ".join(exp)
                     prod_sum.append(f"({exp})")
@@ -131,11 +131,11 @@ def main():
         for r in quine_results:
             prod = r[0]
             exp = []
-            for val in prod:
+            for i, val in enumerate(prod):
                 if val == '0':
-                    exp.append(f"~{vars[prod.index(val)]}")
+                    exp.append(f"~{vars[i]}")
                 elif val == '1':
-                    exp.append(vars[prod.index(val)])
+                    exp.append(vars[i])
             # insert "/\" between each expression
             exp = " /\\ ".join(exp)
             prod_sum.append(exp)

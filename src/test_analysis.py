@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from lexical_analysis import LexicalAnalysis
 from syntactic_analysis import SyntacticAnalysis
 from semantic_analysis import SemanticAnalysis
@@ -15,9 +16,10 @@ def tokenize(line):
     
 
 def main():
-    samples = 1000
+    samples = 10
     # for each test file in folder tests
     folder = [f for f in listdir('tests') if f.endswith('.txt')]
+    folder.sort()
 
     # file names are test_{n_vars}_{n_lines}.txt
     # n_vars = number of variables
@@ -48,11 +50,11 @@ def main():
             # calculate the average time
             avg_time = total_time / samples
             # add the result to the dataframe
-            pd.concat([df, pd.DataFrame([[n_vars, n_lines, avg_time]], columns=['n_vars', 'n_lines', 'avg_time'])])
+            df = pd.concat([df, pd.DataFrame([[n_vars, n_lines, avg_time]], columns=['n_vars', 'n_lines', 'avg_time'])])
             print(f"Mean time for {file}: {total_time/samples}")
     
-    # save the dataframe to a csv file
-    df.to_csv("avg_runtime_report.csv", index=False)
+        # save the dataframe to a csv file
+        df.to_csv("avg_runtime_report.csv", index=False)    
 
 
 if __name__ == "__main__":

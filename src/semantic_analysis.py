@@ -312,7 +312,8 @@ class SemanticAnalysis(Expression):
         Returns:
             list: The variables of the expression
         """
-        return self._vars.copy()
+        global env
+        return list(env.keys())
     
     def get_expression(self) -> Expression:
         """
