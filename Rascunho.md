@@ -28,7 +28,7 @@ Na etapa seguinte é analisada a estrutura sintática da expressão, utilizando-
 
 ![Notação polonesa reversa](images/npr.png)
 
- Na última etapa da análise é realizada a valoração de cada um de seus literais numa implementação  recursiva de uma árvore sintática abstrata, construída de forma que os nós-folha representem os componentes elementares da expressão, cada nó intermediário represente a valoração dos conectivos e o nó raiz represente o valor-verdade da expressão completa, a valoração ocorre de baixo para cima, ou seja, os primeiros nós a serem valorados são os nós-folha, precedidos por seus conectivos de forma recursiva até a valoração do nó raiz.
+ Na última etapa da análise é realizada a valoração de cada um de seus literais numa implementação  recursiva de uma árvore sintática abstrata, construída de forma que os nós-folha representem os componentes elementares da expressão, cada nó intermediário represente a valoração dos conectivos e o nó raiz represente o valor-verdade da expressão completa, a valoração ocorre de baixo para cima, ou seja, os primeiros nós a serem valorados são os nós-folha, precedidos por seus conectivos de forma recursiva até a valoração do nó raiz. Essa implementação é obtida por meio de polimorfismo, todas as classes representam um token, que por sua vez, representa uma operação ou operando, todas as classes derivam de uma classe virtual Expression, que representa o maior nível de abstração desses elementos, de Expression derivam-se as classes Operand e Operation, de Operand, derivam-se as classes Binary e Variable, que por sua vez, carregam valores associados. De Operation derivam-se UnaryOperation e BinaryOperation, De Unary Operation deriva-se apenas Not, que carrega a função de negação na valoração da árvore, De BinaryOperation derivam-se as classes correspondentes a seus atributos lógicos: And, Or, Conditional e Binconditional. Como interface para essas classes foi escrita a classe SemanticAnalysis, responsável por instanciar corretamente a estrutra da árvore de acordo com a entrada e facilitar a saída dos dados de forma compreensível, em forma de tabela.
 
 Como resultado dessa análise obtem-se os _tokens_ léxicos estruturados em notação polonesa reversa e por fim a tabela verdade da expressão completa, com a qual podemos verificar os termos de satisfabilidade da expressão. É possível também valorar a tabela verdade de qualquer expressão intermediária a partir da valoração da sub-árvore que a representa.
 
@@ -38,7 +38,37 @@ Como resultado dessa análise obtem-se os _tokens_ léxicos estruturados em nota
 
 Para afirmar que duas expressões lógicas quaisquer são equivalentes é necessário que se observe o mesmo número de variáveis e a mesma tabela verdade associada a cada uma das expressões, otimização lógica é o processo de buscar uma expressão equivalente que minimize o número de operações intermediárias, para tanto foi integrado neste analisador o algoritmo de otimização de Quine-McCluskey descrito e implementado em [Software para minimização de expressões lógicas utilizando Mapas de Karnaugh](https://eventos.utfpr.edu.br//sicite/sicite2020/paper/view/6073), que conta com uma implementação de um algoritmo de programação dinâmica e outro algoritmo guloso para solução do problema. Quine-McCluskey baseia sua solução na análise de implicantes primos a partir de mapas de Karnaugh para representar a sentença na forma de soma de produtos, utilizando-se apenas das três operações básicas da álgebra booleana. Mapas de Karnaugh são diagramas utilizados para simplificação de expressões lógicas a partir da representação bidimensional da tabela verdade de uma expressão e agrupamento de valores-verdade.
 
+#### Análise de desempenho
+
+Para a análise de desempenho foi escrito o _script_ Python _test_generator.py_, localizado na pasta _tests_ que gera strings válidas sintática e lexicograficamente na linguagem proposta para que sejam valoradas pela classe de análise semântica e para que o tempo de execução do programa seja registrado com entradas controladas. Neste procedimento de geração da cadeia de caracteres foram geradas letras de "a" até "p" para tokens de variável e uma escolha aleatória entre "/\\", "\\/", ">" e"=", de acordo com o lexicon, representando as operações, é importante ressaltar que parênteses foram excluídos dessas escolhas pois não representam uma operação em si, mas uma forma de explicitar a precedência a ser seguida. foram geradas entradas de 5 até 16 variáveis nomeadas e dispostas na expressão em ordem alfabética, cada expressão possui o número de variáveis - 1 operações e, em média, 50% da variáveis são negadas, para cada número de variáveis possível foram gerados 4 arquivos contendo de 1 até 1000 expressões com a razão de 10 vezes entre os arquivos.
+
+Foi escrito também outro _script_ para a leitura e processamento e monitoramento do tempo de execução do analisador semântico nessas entradas, esse _script_ gera 10 amostras de tempo por arquivo e salva o tempo médio de execução em um arquivo _.csv_ contendo também o número de linhas e de variáveis dos respectivos arquivos.
+
 ## Resultados e Discussões
+
+Após a geração de arquivos de teste e execução dos experimentos obtemos uma tabela no formato _.csv_ contendo o número de variáveis, o de linhas e o tempo médio de execução em segundos de cada experimento, a partir desses dados podemos realizar uma análise exploratória para a análise da complexidade de tempo desse algoritmo.
+
+![Tempo médio de execução em relação ao № de variáveis](runtime_analysis/avg_runtime_n_vars.png)
+
+![](runtime_analysis/avg_runtime_n_vars_log.png)
+
+Podemos observar nos gráficos acima uma relação aproximadamente exponencial do número de variáveis com o tempo médio de execução.
+
+![](runtime_analysis/correlation_runtime_by_n_vars.png)
+
+Ao calcular o coeficiente de correlação da função do número de variáveis com f(x) = 2^x obtemos o valor médio de 0.9362848072499903.
+
+![](runtime_analysis/avg_runtime_n_lines.png)
+
+![](runtime_analysis/avg_runtime_n_lines_log.png)
+
+Também é possível enxergar uma relação aproximadamente linear do número de expressôes com o tempo médio de execução.
+
+![](runtime_analysis/correlation_runtime_by_n_lines.png)
+
+Ao calcular o coeficiente de correlação da função do número de variáveis com f(x) = x obtemos o valor médio de 0.9120112897941848.
+
+Podemos portanto afirmar que complexidade de tempo dessa implementação pode ser aproximada pela função assintótica O(N) = 2^N com N sendo o número de variáveis e O(M) = M com M sendo o número de expressões de mesmo grau e número de variáveis.
 
 ## Conclusão
 

@@ -276,9 +276,10 @@ class SemanticAnalysis(Expression):
         """
         from tabulate import tabulate
 
+        # Se a expressão não tiver resultados, não há tabela verdade
         if self.__results == []:
             self.evaluate()
-        
+
         vars = self.get_variables()
         n = len(vars)
         vars.append("Resultado")
@@ -288,9 +289,13 @@ class SemanticAnalysis(Expression):
             num for num in ("{0:b}".format(p).zfill(n) for p in range(2**n))
         ]
 
-        vars 
+        # Inicializa a matriz representando a tabela verdade
+        # Primeira linha são os nomes das variáveis
         table = [vars]
+
+        # Itera sobre as combinações
         for i, combination in enumerate(combinations):
+            # Adiciona a combinação na tabela verdade
             row = []
             for j, _ in enumerate(env):
                 row.append(combination[j])
