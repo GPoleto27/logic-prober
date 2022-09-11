@@ -5,7 +5,7 @@
 ## Introdução
 
 Lógica proposicional é uma forma de descrever comportamentos lógicos obedecendo a álgebra booleana e está presente nos dias de hoje em quase todo aparelho eletrônico, ser capaz de analisar, simular e otimizar sentenças lógicas significa ser capaz de realizar esses mesmos processos nos circuitos digitais que implementam a lógica da expressão. 
-Para o desenvolvimento desses processos foram implementadas as estruturas de máquina de estados, pilha, fila, e árvore sintática abstrata na linguagem de programação Python.
+Para o desenvolvimento desses processos foram implementadas as estruturas de máquina de estados, pilha, fila, e árvore sintática abstrata, além de uma interface de linha de comando para a análise de expressões na linguagem de programação Python.
 Para a análise da complexidade de tempo foram escritos scripts Python para geração de casos de teste e monitoramento do tempo de execução em múltiplos experimentos, além de scripts para plotagem de gráficos e computação de correlações com funções assintóticas.
 
 ## Materiais e Métodos
@@ -38,6 +38,10 @@ Na etapa seguinte é analisada a estrutura sintática da expressão, utilizando-
 Como resultado dessa análise obtem-se os _tokens_ léxicos estruturados em notação polonesa reversa e por fim a tabela verdade da expressão completa, com a qual podemos verificar os termos de satisfabilidade da expressão. É possível também valorar a tabela verdade de qualquer expressão intermediária a partir da valoração da sub-árvore que a representa.
 
 ![Árvore sintática abstrata](images/AST.png)
+
+#### Interface de linha de comando
+
+Como parte da integração dos analisadores, foi criado o programa principal _src/main.py_ que implementa uma interface de linha de comando, recebendo como entrada uma expressão a ser analisada ou o caminho de um arquivo com uma expressão por linha, além de um argumento para a verbosidade da saída das análises, o programa realiza as análise e exibe mensagens de saída das etapas de análise.
 
 #### Integração com minimizador de expressões lógicas
 
@@ -79,9 +83,11 @@ Ao calcular o coeficiente de correlação da função do número de variáveis c
 
 ![](runtime_analysis/correlation_runtime_by_n_lines.png)
 
-Podemos portanto afirmar que complexidade de tempo dessa implementação pode ser aproximada pela função assintótica _O(N) = 2^N_ com _N_ sendo o número de variáveis e _O(M) = M_ com _M_ sendo o número de expressões de mesmo grau e número de variáveis.
+Podemos portanto afirmar que complexidade de tempo dessa implementação pode ser aproximada pela função assintótica _O(N) = 2^N_ com _N_ sendo o número de variáveis e _O(M) = M_ com _M_ sendo o número de expressões de mesmo número de operações e de variáveis.
 
 ## Conclusão
+
+Nesse trabalho foram integrados analisadores léxico, sintático e semântico e o algoritmo de otimização de expressões de Quine-McCluskey  em uma interface de linha de comando, foi também realizada a análise assintótica da complexidade de tempo do analisador semântico implementado por meio de análise exploratória da função do tempo de execução do programa pelo tamanho de suas entradas, em que se concluiu que o programa tem complexidade descrita por _O(N) = 2^N_ em que _N_ é o número de variáveis e _O(M) = M_ em que _M_ é o número de expressões de mesmo número de operações e de variáveis.
 
 ## Agradecimentos
 
