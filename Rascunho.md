@@ -4,6 +4,10 @@
 
 ## Introdução
 
+Lógica proposicional é uma forma de descrever comportamentos lógicos obedecendo a álgebra booleana e está presente nos dias de hoje em quase todo aparelho eletrônico, ser capaz de analisar, simular e otimizar sentenças lógicas significa ser capaz de realizar esses mesmos processos nos circuitos digitais que implementam a lógica da expressão. 
+Para o desenvolvimento desses processos foram implementadas as estruturas de máquina de estados, pilha, fila, e árvore sintática abstrata na linguagem de programação Python.
+Para a análise da complexidade de tempo foram escritos scripts Python para geração de casos de teste e monitoramento do tempo de execução em múltiplos experimentos, além de scripts para plotagem de gráficos e computação de correlações com funções assintóticas.
+
 ## Materiais e Métodos
 
 A álgebra booleana é um sistema algébrico que busca descrever problemas lógicos a partir de dois possíveis valores: verdadeiro ou falso, e três operações fundamentais, duas binárias (que operam com 2 valores): disjunção (_and_) e conjunção (_or_), e uma unária: negação (_not_), este conjunto de regras é a fundação da lógica proposicional, que é aplicada para definir o comportamento lógico de um conjunto de entradas.
@@ -19,8 +23,7 @@ Uma expressão lógica é um conjunto de conectivos (operações) e literais (va
 
 #### Desenvolvimento e integração do analisador
 
-Para a implementação do processo de análise de expressões lógicas, que consiste de três etapas, foi escrito um programa na linguagem de programação Python responsável por interfacear a entrada das proposições com o analisador, na analise léxica uma sequência de caracteres representando a expressão é consumida por uma máquina de estados que descreve as características léxicas da linguagem proposta para a representação das sentenças lógicas, para este fim, foi realizada a implementaçao máquina de estados descrita em [LEXF: Um Analisador Lexical Eficiente
-e Multipropósito](https://eventos.utfpr.edu.br//sicite/sicite2020/paper/view/7353) que tem como resultado a _tokenização_ da expressão. O processo de tokenização trata de atribuir um identificador (_token_) a cada elemento da expressão que esteja de acordo com as regras léxicas, cada identificador representa um tipo de operando ou operações, nesta implementação o _lexicon_ (conjunto de _tokens_ possíveis) é: _PAR_ (parêntese), _NEG_ (negação), _BIN_ (valor binário), _VAR_ (variável), _DISJ_ (disjunção), _CONJ_ (conjunção), _COND_ (condicional), _BICON_ (bicondicional).
+Para a implementação do processo de análise de expressões lógicas, que consiste de três etapas, foi escrito um programa na linguagem de programação Python responsável por interfacear a entrada das proposições com o analisador, na analise léxica uma sequência de caracteres representando a expressão é consumida por uma máquina de estados que descreve as características léxicas da linguagem proposta para a representação das sentenças lógicas, para este fim, foi realizada a implementaçao máquina de estados descrita em [LEXF: Um Analisador Lexical Eficiente e Multipropósito](https://eventos.utfpr.edu.br//sicite/sicite2020/paper/view/7353) que tem como resultado a _tokenização_ da expressão. O processo de tokenização trata de atribuir um identificador (_token_) a cada elemento da expressão que esteja de acordo com as regras léxicas, cada identificador representa um tipo de operando ou operações, nesta implementação o _lexicon_ (conjunto de _tokens_ possíveis) é: _PAR_ (parêntese), _NEG_ (negação), _BIN_ (valor binário), _VAR_ (variável), _DISJ_ (disjunção), _CONJ_ (conjunção), _COND_ (condicional), _BICON_ (bicondicional).
 
 ![Autômato Base](images/automato_base.png)
 
@@ -30,13 +33,15 @@ Na etapa seguinte é analisada a estrutura sintática da expressão, utilizando-
 
  Na última etapa da análise é realizada a valoração de cada um de seus literais numa implementação  recursiva de uma árvore sintática abstrata, construída de forma que os nós-folha representem os componentes elementares da expressão, cada nó intermediário represente a valoração dos conectivos e o nó raiz represente o valor-verdade da expressão completa, a valoração ocorre de baixo para cima, ou seja, os primeiros nós a serem valorados são os nós-folha, precedidos por seus conectivos de forma recursiva até a valoração do nó raiz. Essa implementação é obtida por meio de polimorfismo, todas as classes representam um token, que por sua vez, representa uma operação ou operando, todas as classes derivam de uma classe virtual Expression, que representa o maior nível de abstração desses elementos, de Expression derivam-se as classes Operand e Operation, de Operand, derivam-se as classes Binary e Variable, que por sua vez, carregam valores associados. De Operation derivam-se UnaryOperation e BinaryOperation, De Unary Operation deriva-se apenas Not, que carrega a função de negação na valoração da árvore, De BinaryOperation derivam-se as classes correspondentes a seus atributos lógicos: And, Or, Conditional e Binconditional. Como interface para essas classes foi escrita a classe SemanticAnalysis, responsável por instanciar corretamente a estrutra da árvore de acordo com a entrada e facilitar a saída dos dados de forma compreensível, em forma de tabela.
 
+![Diagrama de classes](images/diagrama_de_classes.png)
+
 Como resultado dessa análise obtem-se os _tokens_ léxicos estruturados em notação polonesa reversa e por fim a tabela verdade da expressão completa, com a qual podemos verificar os termos de satisfabilidade da expressão. É possível também valorar a tabela verdade de qualquer expressão intermediária a partir da valoração da sub-árvore que a representa.
 
 ![Árvore sintática abstrata](images/AST.png)
 
 #### Integração com minimizador de expressões lógicas
 
-Para afirmar que duas expressões lógicas quaisquer são equivalentes é necessário que se observe o mesmo número de variáveis e a mesma tabela verdade associada a cada uma das expressões, otimização lógica é o processo de buscar uma expressão equivalente que minimize o número de operações intermediárias, para tanto foi integrado neste analisador o algoritmo de otimização de Quine-McCluskey descrito e implementado em [Software para minimização de expressões lógicas utilizando Mapas de Karnaugh](https://eventos.utfpr.edu.br//sicite/sicite2020/paper/view/6073), que conta com uma implementação de um algoritmo de programação dinâmica e outro algoritmo guloso para solução do problema. Quine-McCluskey baseia sua solução na análise de implicantes primos a partir de mapas de Karnaugh para representar a sentença na forma de soma de produtos, utilizando-se apenas das três operações básicas da álgebra booleana. Mapas de Karnaugh são diagramas utilizados para simplificação de expressões lógicas a partir da representação bidimensional da tabela verdade de uma expressão e agrupamento de valores-verdade.
+Para afirmar que duas expressões lógicas quaisquer são equivalentes é necessário que se observe o mesmo número de variáveis e a mesma tabela verdade associada a cada uma das expressões, otimização lógica é o processo de buscar uma expressão equivalente que minimize o número de operações intermediárias, para tanto foi integrado neste analisador o algoritmo de otimização de Quine-McCluskey descrito e implementado em [Software educacional para ensino de minimização de expressões lógicas](https://eventos.utfpr.edu.br//sicite/sicite2021/paper/view/7870), que conta com uma implementação de um algoritmo de programação dinâmica e outro algoritmo guloso para solução do problema. Quine-McCluskey baseia sua solução na análise de implicantes primos para representar a sentença na forma de soma de produtos, utilizando-se apenas das três operações básicas da álgebra booleana.
 
 #### Análise de desempenho
 
@@ -50,25 +55,31 @@ Após a geração de arquivos de teste e execução dos experimentos obtemos uma
 
 ![Tempo médio de execução em relação ao № de variáveis](runtime_analysis/avg_runtime_n_vars.png)
 
+Podemos observar no gráfico acima que existe uma relação aproximadamente exponencial do número de variáveis com o tempo médio de execução, e abaixo vemos que de forma independente do número de expressões, todas seguem o mesmo comportamento de crescimento da função.
+
 ![](runtime_analysis/avg_runtime_n_vars_log.png)
 
-Podemos observar nos gráficos acima uma relação aproximadamente exponencial do número de variáveis com o tempo médio de execução.
+Podemos, portanto, assumir o conjunto de dados onde o número de expressões é de 1000 como o conjunto que representará a função de tempo do algoritmo e o chamaremos de _F(x)_, a partir dela podemos buscar uma função _f(x)_ que se aproxime da função de tempo do algoritmo e que apresente o mesmo comportamento de crescimento. Como mencionado anteriormente, observou-se que a função parece ter comportamento exponencial, portanto, podemos comparar a função _f(x)=2^x_ com a função de tempo do programa.
+
+![](runtime_analysis/avg_runtime_n_vars_2_x_log.png)
+
+O gráfico acima explicita o mesmo comportamento de crescimento em abas as funções e o mapa de calor abaixo evidencia a correlação de ambas as funções. Ao calcular o coeficiente de correlação da função de tempo de execução com _f(x) = 2^x_ obtemos o valor médio de 0.9362848072499903.
 
 ![](runtime_analysis/correlation_runtime_by_n_vars.png)
 
-Ao calcular o coeficiente de correlação da função do número de variáveis com f(x) = 2^x obtemos o valor médio de 0.9362848072499903.
+A notação Big-O é uma notação matemática que descreve o comportamento limitante superior de uma função e pode ser descrito como uma função que se aproxime do limite superior da função a ser analisada. De acordo com a análise aqui apresentada, _f(x)=2^x_ pode ser assumida como função assíntótica da função de tempo de execução por número de variáveis, podemos então afirmar que a complexidade de tempo dessa implementação pode ser aproximada pela função assintótica _O(N) = 2^N_.
 
 ![](runtime_analysis/avg_runtime_n_lines.png)
 
+De forma análoga, podemos analisar a função de tempo de execução por número de expressões de entrada. Observa-se uma relação linear entre as variáveis e mesmo comportamento de crescimento independente de número de variáveis.
+
 ![](runtime_analysis/avg_runtime_n_lines_log.png)
 
-Também é possível enxergar uma relação aproximadamente linear do número de expressôes com o tempo médio de execução.
+Ao calcular o coeficiente de correlação da função do número de variáveis com _f(x) = x_ obtemos o valor médio de 0.9120112897941848.
 
 ![](runtime_analysis/correlation_runtime_by_n_lines.png)
 
-Ao calcular o coeficiente de correlação da função do número de variáveis com f(x) = x obtemos o valor médio de 0.9120112897941848.
-
-Podemos portanto afirmar que complexidade de tempo dessa implementação pode ser aproximada pela função assintótica O(N) = 2^N com N sendo o número de variáveis e O(M) = M com M sendo o número de expressões de mesmo grau e número de variáveis.
+Podemos portanto afirmar que complexidade de tempo dessa implementação pode ser aproximada pela função assintótica _O(N) = 2^N_ com _N_ sendo o número de variáveis e _O(M) = M_ com _M_ sendo o número de expressões de mesmo grau e número de variáveis.
 
 ## Conclusão
 
