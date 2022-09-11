@@ -2,6 +2,12 @@
 
 ###### Guilherme Poleto, Gustavo Henrique Paetzold
 
+### Resumo
+
+A lógica proposicional descreve comportamentos lógicos pelas regras da álgebra booleana, analisar, simular e otimizar sentenças lógicas significa poder simular essas operações a nível lógico para os circuitos que implementam o comportamento lógico dessas expressões.
+Nesse trabalho foram implementados e integrados analisadores léxico, sintático e semântico bem como um otimizador de expressões lógicas num programa de interface de linha de comando, foi também analisada a complexidade de tempo do método de análise semântica das expressões baseada em seu tempo médio de execução em relação a entradas controladas geradas de forma procedural.
+Obteve-se como resultado um programa capaz de receber expressões como entrada que são analisadas e otimizadas, além de um relatório de erros (se houverem) e a tabela-verdade da expressão. Concluiu-se também que a complexidade de tempo do algoritmo de análise semântica implementado baseado em árvore sintática abstrata é _O(2^n)_ sendo n o número de variáveis da expressão a ser analisada. 
+
 ## Introdução
 
 Lógica proposicional é uma forma de descrever comportamentos lógicos obedecendo a álgebra booleana e está presente nos dias de hoje em quase todo aparelho eletrônico, ser capaz de analisar, simular e otimizar sentenças lógicas significa ser capaz de realizar esses mesmos processos nos circuitos digitais que implementam a lógica da expressão. 
