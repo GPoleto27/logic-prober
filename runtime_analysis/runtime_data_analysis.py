@@ -1,3 +1,4 @@
+from re import S
 import pandas as pd
 import seaborn as sns
 import numpy as np
@@ -82,6 +83,8 @@ sns_plot.set_ylabel("Tempo médio de execução (s)")
 sns_plot.legend(title="Número de expressões")
 # save plot
 sns_plot.figure.savefig("avg_runtime_n_vars_log_scatter.png")
+
+sns_plot.clear()
 
 # plot correlation coefficient between f(x) and F(x)
 sns_plot = sns.heatmap(corr, annot=True, cmap="YlGnBu")
