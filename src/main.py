@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from time import time
 
 from console_logging.console import Console
 
@@ -34,9 +35,12 @@ def main():
     console = Console()
     console.setVerbosity(args.verbosity)
 
+    pd = False
+
     if args.input != "":
         console.info("Input file given, reading expressions from file")
         with open(args.input, "r") as input_data:
+            start_time = time()
             for i, line in enumerate(input_data):
                 line = line.replace("\n", "")
                 accepted, accepted_tokens, errors = LexicalAnalysis().evaluate(line)
@@ -60,10 +64,13 @@ def main():
                 console.success("[SYN] Aceito.")
 
                 semantic = SemanticAnalysis(accepted_tokens)
+                
                 semantic_results = semantic.evaluate()
+                
                 vars = semantic.get_variables()
 
-                console.success(f"[SEM] {semantic_results}")
+                console.success(f"[SEM] Aceito.")
+                semantic.print_truth_table()
 
                 termos = []
                 for i in range(len(semantic_results)):
@@ -72,20 +79,25 @@ def main():
 
                 quine_results = Quine(termos, len(vars)).getResposta()
                 prod_sum = []
+
+                # Gerar a expressão como produto de soma
                 for r in quine_results:
                     prod = r[0]
                     exp = []
-                    for val in prod:
+                    for i, val in enumerate(prod):
                         if val == '0':
-                            exp.append(f"~{vars[prod.index(val)]}")
+                            exp.append(f"~{vars[i]}")
                         elif val == '1':
-                            exp.append(vars[prod.index(val)])
-                    # insert "/\" between each expression
+                            exp.append(vars[i])
+                    # Inserir "/\" entre cada expressão
                     exp = " /\\ ".join(exp)
                     prod_sum.append(f"({exp})")
-                # insert "\/" between each expression
+                # Inserir "\/" entre cada expressão
                 prod_sum = " \\/ ".join(prod_sum)
                 console.success(f"[OPT] {prod_sum}")
+            
+            end_time = time()
+            console.info(f"Tempo de execução: {end_time - start_time}s")
 
     else:
         console.info("Expression given, reading expression from arguments")
@@ -109,7 +121,8 @@ def main():
         semantic_results = semantic.evaluate()
         vars = semantic.get_variables()
 
-        console.success(f"[SEM] {semantic_results}")
+        console.success(f"[SEM] Aceito.")
+        semantic.print_truth_table()
 
         termos = []
         for i in range(len(semantic_results)):
@@ -121,11 +134,11 @@ def main():
         for r in quine_results:
             prod = r[0]
             exp = []
-            for val in prod:
+            for i, val in enumerate(prod):
                 if val == '0':
-                    exp.append(f"~{vars[prod.index(val)]}")
+                    exp.append(f"~{vars[i]}")
                 elif val == '1':
-                    exp.append(vars[prod.index(val)])
+                    exp.append(vars[i])
             # insert "/\" between each expression
             exp = " /\\ ".join(exp)
             prod_sum.append(exp)

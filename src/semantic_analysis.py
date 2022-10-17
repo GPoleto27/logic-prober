@@ -240,6 +240,7 @@ class SemanticAnalysis(Expression):
 
         # Pega a expressão no topo da pilha
         self.__expression = stack.popleft()
+        self._vars = list(env.keys())
 
     def evaluate(self) -> list:
         """
@@ -250,7 +251,7 @@ class SemanticAnalysis(Expression):
         global env
 
         # Pega o número de variáveis da expressão
-        n: int = len(env)
+        n: int = len(env.keys())
 
         # Gera as combinações de variáveis da expressão
         combinations = [
@@ -268,6 +269,39 @@ class SemanticAnalysis(Expression):
 
         # Retorna a lista de resultados da expressão
         return self.__results.copy()
+
+    def print_truth_table(self):
+        """
+        print_truth_table is a method that pretty-prints the truth table of the expression.
+        """
+        from tabulate import tabulate
+
+        # Se a expressão não tiver resultados, não há tabela verdade
+        if self.__results == []:
+            self.evaluate()
+
+        vars = self.get_variables()
+        n = len(vars)
+        vars.append("Resultado")
+
+        # Gera as combinações de variáveis da expressão
+        combinations = [
+            num for num in ("{0:b}".format(p).zfill(n) for p in range(2**n))
+        ]
+
+        # Inicializa a matriz representando a tabela verdade
+        # Primeira linha são os nomes das variáveis
+        table = [vars]
+
+        # Itera sobre as combinações
+        for i, combination in enumerate(combinations):
+            # Adiciona a combinação na tabela verdade
+            row = []
+            for j, _ in enumerate(env):
+                row.append(combination[j])
+            row.append("1" if self.__results[i] else "0")
+            table.append(row)
+        print(tabulate(table, headers='firstrow', tablefmt="fancy_grid"))
 
     def is_tautology(self) -> bool:
         """
@@ -311,6 +345,7 @@ class SemanticAnalysis(Expression):
         Returns:
             list: The variables of the expression
         """
+        global env
         return list(env.keys())
     
     def get_expression(self) -> Expression:
